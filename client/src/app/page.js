@@ -1,7 +1,8 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import Modal from 'react-modal';
+import Input from '@/component/Input';
 import "react-datepicker/dist/react-datepicker.css";
 
 export default function Home() {
@@ -19,6 +20,10 @@ export default function Home() {
     email: '',
     portfolioLink: ''
   });
+
+  useEffect(() => {
+    Modal.setAppElement('#root');
+  }, []);
 
   const [visible, setVisible] = useState(false);
   const customStyles = {
@@ -101,69 +106,73 @@ export default function Home() {
           </div>
         </div>
       </Modal>
-      <div className="d-flex justify-content-center flex-row">
-        <div className='welcome_page'>
-          <div className='header'>
-            <p className='welcome_line'>Welcome! <img src='images/vector.svg' /></p>
-            <p className='description'>Please, complete the following example form.</p>
+      {
+        !visible &&
+        <div className="d-flex justify-content-center flex-row" id='root'>
+          <div className='welcome_page'>
+            <div className='header'>
+              <p className='welcome_line'>Welcome! <img src='images/vector.svg' /></p>
+              <p className='description'>Please, complete the following example form.</p>
+            </div>
+            <form onSubmit={handleSubmit}>
+              <div className='main_body'>
+                <div className='about'>
+                  About you
+                </div>
+                <Input
+                  label={'FULL NAME'}
+                  type={'text'}
+                  value={userData.fullName}
+                  onChange={(value) => setUserData({ ...userData, fullName: value })}
+                  required={true}
+                  icon={errorData.fullName ? 'images/profile_red.svg' : 'images/profile.svg'}
+                  error={errorData.fullName}
+                />
+                <div className='input_fields'>
+                  <label>DATE OF BIRTH</label>
+                  <div className="d-flex input_field_body">
+                    <img src='/images/calendar-date.svg' />
+                    <DatePicker selected={userData.dateOfBirth} onChange={(date) => setUserData({ ...userData, dateOfBirth: date })} />
+                  </div>
+                </div>
+                <Input
+                  label={'NICKNAME'}
+                  type={'text'}
+                  placeholder={'No Spaces'}
+                  value={userData.nickName}
+                  onChange={(value) => setUserData({ ...userData, nickName: value })}
+                  required={true}
+                  icon={errorData.nickName ? 'images/vector_arrow_red.svg' : 'images/vector_arrow.svg'}
+                  error={errorData.nickName}
+                />
+                <Input
+                  label={'EMAIL'}
+                  type={'text'}
+                  placeholder={'email@domain.com'}
+                  value={userData.email}
+                  onChange={(value) => setUserData({ ...userData, email: value })}
+                  required={true}
+                  icon={errorData.email ? 'images/email_red.svg' : 'images/email.svg'}
+                  error={errorData.email}
+                />
+                <Input
+                  label={'PORTFOLIO LINK'}
+                  type={'text'}
+                  placeholder={'https://'}
+                  value={userData.portfolioLink}
+                  onChange={(value) => setUserData({ ...userData, portfolioLink: value })}
+                  required={true}
+                  icon={errorData.portfolioLink ? 'images/link_red.svg' : 'images/link.svg'}
+                  error={errorData.portfolioLink}
+                />
+              </div>
+              <div className='footer d-flex justify-content-end'>
+                <button type="submit">Submit my form <img src='images/all-open-16-fit.svg' /></button>
+              </div>
+            </form>
           </div>
-          <form onSubmit={handleSubmit}>
-            <div className='main_body'>
-              <div className='about'>
-                About you
-              </div>
-              <div className='input_fields'>
-                <label>FULL NAME <img src='images/star.svg' /></label>
-                <div className={errorData.fullName ? 'error d-flex input_field_body' : 'd-flex input_field_body'}>
-                  <img src={errorData.fullName ? 'images/profile_red.svg' : 'images/profile.svg'} />
-                  <input type="text" value={userData.fullName} onChange={(e) => { setUserData({ ...userData, fullName: e.target.value }) }} />
-                </div>
-                <span>{errorData.fullName}</span>
-              </div>
-              {/* <Input
-                label="FULL NAME"
-                value={userData.fullName}
-                onChange={(e) => { setUserData({ ...userData, fullName: e.target.value }) }}
-                error={errorData.fullName}
-              /> */}
-              <div className='input_fields'>
-                <label>DATE OF BIRTH</label>
-                <div className="d-flex input_field_body">
-                  <img src='/images/calendar-date.svg' />
-                  <DatePicker selected={userData.dateOfBirth} onChange={(date) => setUserData({ ...userData, dateOfBirth: date })} />
-                </div>
-              </div>
-              <div className='input_fields'>
-                <label>NICKNAME <img src='images/star.svg' /></label>
-                <div className={errorData.nickName ? 'error d-flex input_field_body' : 'd-flex input_field_body'}>
-                  <img src={errorData.nickName ? 'images/vector_arrow_red.svg' : 'images/vector_arrow.svg'} />
-                  <input type="text" placeholder='No Spaces' value={userData.nickName} onChange={(e) => { setUserData({ ...userData, nickName: e.target.value }) }} />
-                </div>
-                <span>{errorData.nickName}</span>
-              </div>
-              <div className='input_fields'>
-                <label>EMAIL <img src='images/star.svg' /></label>
-                <div className={errorData.email ? 'error d-flex input_field_body' : 'd-flex input_field_body'}>
-                  <img src={errorData.email ? 'images/email_red.svg' : 'images/email.svg'} />
-                  <input type="text" placeholder='email@domain.com' value={userData.email} onChange={(e) => { setUserData({ ...userData, email: e.target.value }) }} />
-                </div>
-                <span>{errorData.email}</span>
-              </div>
-              <div className='input_fields'>
-                <label>PORTFOLIO LINK<img src='images/star.svg' /></label>
-                <div className={errorData.portfolioLink ? 'error d-flex input_field_body' : 'd-flex input_field_body'}>
-                  <img src={errorData.portfolioLink ? 'images/link_red.svg' : 'images/link.svg'} />
-                  <input type="text" placeholder='https://' value={userData.portfolioLink} onChange={(e) => { setUserData({ ...userData, portfolioLink: e.target.value }) }} />
-                </div>
-                <span>{errorData.portfolioLink}</span>
-              </div>
-            </div>
-            <div className='footer d-flex justify-content-end'>
-              <button type="submit">Submit my form <img src='images/all-open-16-fit.svg' /></button>
-            </div>
-          </form>
         </div>
-      </div>
+      }
     </>
   )
 }
