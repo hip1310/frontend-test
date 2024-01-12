@@ -1,6 +1,6 @@
 ## Getting Started
 
-Instalation steps
+Installation steps
 
 ```bash
 npm install
