@@ -42,6 +42,7 @@ export default function Home() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrorData = {};
+    const storedData = JSON.parse(localStorage.getItem('users')) || [];
 
     if (!userData.fullName) {
       newErrorData.fullName = 'A full name is required to proceed.';
@@ -51,8 +52,15 @@ export default function Home() {
       newErrorData.nickName = 'A nick name is required to proceed.';
     }
 
-    if (userData.nickName && /\s/.test(userData.nickName)) {
-      newErrorData.nickName = 'A nickname without spaces is required to proceed.';
+    if (userData.nickName) {
+      if (/\s/.test(userData.nickName)) {
+        newErrorData.nickName = 'A nickname without spaces is required to proceed.';
+      } else {
+        const isNicknameExists = storedData.some(user => user.nickName === userData.nickName);
+        if (isNicknameExists) {
+          newErrorData.nickName = 'This nickname is already taken. Please choose a different one.';
+        }
+      }
     }
 
     if (!userData.email) {
@@ -74,6 +82,18 @@ export default function Home() {
     setErrorData(newErrorData);
 
     if (Object.keys(newErrorData).length === 0) {
+      const storedData = JSON.parse(localStorage.getItem('users')) || [];
+      const newUser = {
+        fullName: userData.fullName,
+        dateOfBirth: userData.dateOfBirth,
+        nickName: userData.nickName,
+        email: userData.email,
+        portfolioLink: userData.portfolioLink,
+      };
+
+      storedData.push(newUser);
+      localStorage.setItem('users', JSON.stringify(storedData));
+
       setUserData({
         fullName: '',
         dateOfBirth: null,
